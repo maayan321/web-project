@@ -1,0 +1,546 @@
+<html>
+<head>
+    <title>Tweat</title> <!-- title of page-->
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.js"></script>
+    <script src="/javascripts/angularApp.js"></script>
+    <style> .glyphicon-thumbs-up { cursor:pointer } </style>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css">
+    <link rel="stylesheet" href="animate.min.css">
+
+</head>
+
+
+<body ng-app="recipeNews">
+
+<div class="wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <header id="header">
+                    <div class="slider">
+                        <img src="http://prestofoods.com/wp-content/uploads/2014/07/header-about.jpg">
+                    </div>
+                    <nav class="navbar navbar-default">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+
+                            <a class="site-name" href="#" role="button" >
+                                <span class="fa" style="margin-bottom: 10%"></span>
+                                <img src="https://image.ibb.co/bDzw75/33fd3892_6d54_467a_8247_6ba213642b19.png" alt="logo" />
+                            </a>
+                        </div>
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <form>
+                            <ul class="nav navbar-nav navbar-left">
+                                <li><a href="#"><i class="fa fa-home"></i><font size="5">Home</font></a></li>
+                                <li ng-show="!isLoggedIn()"><a href="#/addrecipe"><i></i><font size="5">Add Recipe</font></a></li>
+                                <li><a href="#"><i class="fa fa-home"></i><font size="5">Most Liked Recipes</font></a></li>
+                                <li><a href="#"><i class="fa fa-home"></i><font size="5">Most Liked Users</font></a></li>
+                            </ul>
+                            <div class="collapse navbar-collapse" id="mainNav" >
+                                <input type="submit" value="Search" style=" float: right; margin-top: 20px" >
+                                <input style=" float: right; margin-top: 20px; margin-right: 1%; width: 20%" type="search" placeholder="search a recipe" ng-model="searchText">
+
+                            </div><!-- /.navbar-collapse -->
+                        </form>
+                    </nav>
+
+                </header>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<a href="#/{{username._id}}/follow">
+
+
+<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+    <ul class="nav navbar-nav">
+        <li ng-show="isLoggedIn()"><a href="/#/user">{{ currentUser() }}</a></li>
+        <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/users/login">Log In</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/users">Register</a></li>
+        <li ng-show="isLoggedIn()"><a href="#/addRecipe"><i></i> Add Recipe</a></li>
+    </ul>
+</nav>
+<!--<div class="collapse navbar-collapse" id="mainNav" >-->
+    <!--<input type="submit" value="Search" style=" float: right; margin-top: 20px" >-->
+    <!--<input style=" float: right; margin-top: 20px; margin-right: 1%; width: 20%" type="search" placeholder="search a recipe" ng-model="searchText">-->
+
+<!--</div>&lt;!&ndash; /.navbar-collapse &ndash;&gt;-->
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <ui-view></ui-view>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+<!--HOME PAGE-->
+<script type="text/ng-template" id="/home.html">
+
+    <!--<div class="page-header">-->
+        <!--<h1>Flapper News</h1>-->
+    <!--</div>-->
+
+    <!--<div ng-repeat="post in posts | orderBy:'-upvotes'">-->
+        <!--<span class="glyphicon glyphicon-thumbs-up"-->
+              <!--ng-click="incrementUpvotes(post)"></span>-->
+        <!--{{post.upvotes}}-->
+        <!--<span style="font-size:20px; margin-left:10px;">-->
+          <!--<a ng-show="post.link" href="{{post.link}}">-->
+            <!--{{post.title}}-->
+          <!--</a>-->
+          <!--<span ng-hide="post.link">-->
+            <!--{{post.title}}-->
+          <!--</span>-->
+        <!--</span>-->
+    <!--filter:searchText-->
+    <div
+            style="margin: auto "
+            ng-repeat="post in posts |  orderBy:'-upvotes' | filter:searchText "  >
+        <!--<div class="row">-->
+        <div class="col-sm-6 col-md-2 col-lg-3">
+            <div class="thumbnail" >
+
+
+                <img   src={{post.image}} alt="...">
+                <div class="caption">
+                <span>
+                    <!--<a href="#">Read more...</a>-->
+                    <!--<a href="#/posts/{{$index}}">read more</a>-->
+                    <!--<a href="#/posts/{{$index}}/editrecipe">Edit</a>-->
+                <h3>{{post.title}}</h3>
+
+                            <span ng-show="post.name">
+     posted by <a>{{post.name}}</a>
+        </span>
+
+        <span>
+
+    <!--<a href="#/{{username._id}}/follow">follow</a>-->
+    <a href="#/posts/{{post._id}}">Read More...</a>
+   <!--<div ng-show="post.flag">-->
+       <a href="#/posts/{{post._id}}/edit">Edit</a>
+   <!--</div>-->
+        </span>
+
+                </span>
+
+                    <p>            {{post.description}}</p>
+                    <p>{{post.favoritesCount}}</p>
+                    <span class="glyphicon glyphicon-thumbs-up"
+                          ng-click="incrementUpvotes(post)"></span>
+                    <!--<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    </div>
+
+    <div ng-hide="isLoggedIn()">
+
+        <!--filter:searchText-->
+        <div
+                style="margin: auto "
+                ng-repeat="myPost in followedPosts "  >
+                {{myPost.description}}
+
+        </div>
+        <!--{{followedPosts.}}-->
+        <h3>You need to <a href="/#/users/login">Log In</a> or <a href="/#/users">Register</a> before you can add a post.</h3>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="/addRecipe.html">
+
+
+    <form ng-submit="addPost()"
+          ng-show="isLoggedIn()"
+          style="margin-top:30px;">
+        <div class="form-group">
+            <input class="form-control" type="text"  id="name" placeholder="name of recipe" ng-model="title">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" id="image" placeholder="https://source.unsplash.com/TCCCKgdFmBo" ng-model="image" >
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text"  id="ingredients" placeholder="ingredients"  ng-model="ingredients" >
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text"  id="initialdirections" placeholder="initialdirections" ng-model="initialdirections">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text"  id="description" placeholder="description" ng-model="description">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text"  id="type" placeholder="type of recipe" ng-model="type">
+        </div>
+        <div class="form-group">
+            <textarea  rows="4" cols="50" class="form-control" type="text"  id="detailedtext" placeholder="detailedtext" ng-model="detailedtext"></textarea>
+        </div>
+        <div class="form-group">
+            <textarea   rows="4" cols="50" class="form-control" type="text" id="detailedimage" placeholder="https://source.unsplash.com/TCCCKgdFmBo" ng-model="detailedimage" ></textarea>
+        </div>
+        <!--<button type= "submit" value="Show Hide DIV" ng-click="ShowHide()" >Submit!</button>-->
+        <button type= "submit" >Submit!</button>
+        </div>
+    </form>
+    <a href="#">Go Back</a>
+
+
+</script>
+
+
+
+
+
+
+
+    <!--HOME PAGE MY TRYING-->
+    <script type="text/ng-template" id="/user.html">
+        <!--<img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Blueberry_pancakes_%281%29.jpg/220px-Blueberry_pancakes_%281%29.jpg">-->
+
+        <!--<form ng-submit="getFollowedPosts()">-->
+            <!--<button type= "submit" >get</button>-->
+        <!--</form>-->
+
+
+        <div
+                style="margin: auto "
+                ng-repeat="myPost in followedPosts track by $index "  >
+            <!--<div class="row">-->
+            <div class="col-sm-6 col-md-2 col-lg-3">
+                <div class="thumbnail" >
+
+
+                    <img   src={{myPost.image}} alt="...">
+                    <div class="caption">
+                <span>
+                    <!--<a href="#">Read more...</a>-->
+                    <!--<a href="#/posts/{{$index}}">read more</a>-->
+                    <!--<a href="#/posts/{{$index}}/editrecipe">Edit</a>-->
+
+
+                            <span ng-show="myPost.name">
+     posted by <a>{{myPost.name}}</a>
+        </span>
+
+        <span>
+
+    <!--<a href="#/{{username._id}}/follow">follow</a>-->
+    <a href="#/posts/{{myPost._id}}">Read More...</a>
+            <!--<div ng-show="post.flag">-->
+       <a href="#/posts/{{myPost._id}}/edit">Edit</a>
+            <!--</div>-->
+        </span>
+
+                </span>
+                        <h3>{{myPost.title}}</h3>
+                        <p>            {{myPost.description}}</p>
+                        <p>{{myPost.favoritesCount}}</p>
+                        <span class="glyphicon glyphicon-thumbs-up"
+                              ng-click="incrementUpvotes(myPost)"></span>
+                        <!--<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <!--<div-->
+                <!--style="margin: auto "-->
+                <!--ng-repeat="myPost in followedPosts track by $index"  >-->
+            <!--{{myPost.description}}-->
+
+        <!--</div>-->
+    </script>
+
+
+
+
+    <!--EDIT RECIPE VIEW-->
+<script type="text/ng-template" id="/editPost.html">
+
+    <!--<span>{{isLarge ? 'video.large' : 'video.small'}}</span>-->
+    <form ng-submit="updatePost()"
+          ng-show= "isLoggedIn() && canUpdate()"
+
+
+    style="margin-top:30px;">
+        <div class="form-group">
+            <input class="form-control" type="text"  id="name" placeholder="name of recipe" ng-model="title">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" id="image" placeholder="https://source.unsplash.com/TCCCKgdFmBo" ng-model="image" >
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text"  id="ingredients" placeholder="ingredients"  ng-model="ingredients" >
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text"  id="initialdirections" placeholder="initialdirections" ng-model="initialdirections">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text"  id="description" placeholder="description" ng-model="description">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text"  id="type" placeholder="type of recipe" ng-model="type">
+        </div>
+
+        <!--NEED TO ADD-->
+        <div class="form-group">
+            <textarea  rows="4" cols="50" class="form-control" type="text"  id="detailedtext" placeholder="detailedtext" ng-model="detailedtext"></textarea>
+        </div>
+        <div class="form-group">
+            <textarea   rows="4" cols="50" class="form-control" type="text" id="detailedimage" placeholder="https://source.unsplash.com/TCCCKgdFmBo" ng-model="detailedimage" ></textarea>
+        </div>
+        <!--<button type= "submit" value="Show Hide DIV" ng-click="ShowHide()" >Submit!</button>-->
+        <button type= "submit" >Submit!</button>
+        </>
+    </form>
+    <a href="#">Go Back</a>
+
+
+
+    <!---->
+    <!--<form ng-submit="editRecipeName()" >-->
+        <!--<div class="form-group">-->
+            <!--<input class="form-control" type="text"  id="name" placeholder="name of recipe" ng-model="title">-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+            <!--<button type= "submit" >Edit Title</button>-->
+        <!--</div>-->
+    <!--</form>-->
+
+    <!--<form ng-submit="editRecipeImage()" >-->
+        <!--<div class="form-group">-->
+
+            <!--<div class="form-group">-->
+                <!--<input class="form-control" type="text" id="image" placeholder="https://source.unsplash.com/TCCCKgdFmBo" ng-model="image" >-->
+            <!--</div>-->
+
+            <!--<button type= "submit" >Edit Image</button>-->
+        <!--</div>-->
+    <!--</form>-->
+
+
+    <!--<form ng-submit="editRecipeIngredients()" >-->
+        <!--<div class="form-group">-->
+
+
+            <!--<div class="form-group">-->
+                <!--<input class="form-control" type="text"  id="ingredients" placeholder="ingredients"  ng-model="ingredients" >-->
+            <!--</div>-->
+
+            <!--<button type= "submit" >Edit Ingredients</button>-->
+        <!--</div>-->
+    <!--</form>-->
+
+    <!--<form ng-submit="editRecipeInitialdirections()" >-->
+        <!--<div class="form-group">-->
+
+            <!--<div class="form-group">-->
+                <!--<input class="form-control" type="text"  id="initialdirections" placeholder="initialdirections" ng-model="initialdirections">-->
+            <!--</div>-->
+
+            <!--<button type= "submit" >Edit Directions</button>-->
+        <!--</div>-->
+    <!--</form>-->
+
+
+    <!--<form ng-submit="editRecipeDescription()" >-->
+        <!--<div class="form-group">-->
+
+            <!--<div class="form-group">-->
+                <!--<input class="form-control" type="text"  id="description" placeholder="description" ng-model="description">-->
+            <!--</div>-->
+
+            <!--<button type= "submit" >Edit Desription</button>-->
+        <!--</div>-->
+    <!--</form>-->
+
+
+    <!--<form ng-submit="editRecipeType()" >-->
+        <!--<div class="form-group">-->
+
+            <!--<div class="form-group">-->
+                <!--<input class="form-control" type="text"  id="type" placeholder="type of recipe" ng-model="type">-->
+            <!--</div>-->
+
+            <!--<button type= "submit" >Edit Type</button>-->
+        <!--</div>-->
+    <!--</form>-->
+
+
+
+
+    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
+    <!--&lt;!&ndash;<button type= "submit" >Submit!</button>&ndash;&gt;-->
+    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--&lt;!&ndash;</form>&ndash;&gt;-->
+    <!--<a href="#">Go Back</a>-->
+
+</script>
+
+<!--SINGLE RECIPE VIEW-->
+
+<script type="text/ng-template" id="/posts.html">
+    <!--<div class="page-header">-->
+        <!--{{post.recipename}}-->
+        <!--{{post.title}}-->
+        <!--<img src={{post.image}} alt="...">        <h3>-->
+            <!--<a ng-show="post.link" href="{{post.link}}">-->
+                <!--{{post.title}}-->
+            <!--</a>-->
+            <!--<span ng-hide="post.link">-->
+        <!--{{post.title}}-->
+      <!--</span>-->
+        <!--</h3>-->
+    <!--</div>-->
+    <form ng-submit="followUser()">
+        <button type= "submit" >follow</button>
+
+    </form>
+
+    <form ng-submit="UnFollowUser()">
+        <button type= "submit" >UnFollow</button>
+
+    </form>
+
+    <img src={{post.image}} alt="...">
+    <h2>Ingredients:</h2>
+    {{post.ingridients}}
+    <div ng-repeat="ing in post.ingredients">
+        <ul>
+            <li>{{ing}}</li>
+        </ul>
+    </div>
+
+
+    <h2>detailed instructions</h2>
+    <div ng-repeat="textdetail in post.detailedtext track by $index">
+        {{textdetail}}
+        <br>
+        <br>
+        <hr style="display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;">
+        <img src={{post.detailedimage[$index]}}>
+    </div>
+
+
+    <div ng-repeat="comment in post.comments | orderBy:'-upvotes'">
+    <span class="glyphicon glyphicon-thumbs-up"
+          ng-click="incrementUpvotes(comment)"></span>
+        {{comment.upvotes}} - by {{comment.author}}
+        <span style="font-size:20px; margin-left:10px;">
+      {{comment.body}}
+    </span>
+
+    </div>
+
+
+    <form ng-submit="addComment()"
+          ng-show="isLoggedIn()"
+          style="margin-top:30px;">
+        <h3>Add a new comment</h3>
+
+        <div class="form-group">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Comment"
+                   ng-model="body"></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Post</button>
+    </form>
+
+    <div ng-hide="isLoggedIn()">
+        <h3>You need to <a href="/#/users/login">Log In</a> or <a href="/#/users">Register</a> before you can comment.</h3>
+    </div>
+</script>
+
+
+
+<script type="text/ng-template" id="/users.html">
+    <div class="page-header">
+        <h1>Flapper News</h1>
+    </div>
+
+    <div ng-show="error" class="alert alert-danger row">
+        <span>{{ error.message }}</span>
+    </div>
+
+    <form ng-submit="register()"
+          style="margin-top:30px;">
+        <h3>Register</h3>
+
+        <div class="form-group">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Username"
+                   ng-model="user.username"></input>
+        </div>
+        <div class="form-group">
+            <input type="password"
+                   class="form-control"
+                   placeholder="Password"
+                   ng-model="user.password"></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</script>
+
+
+<script type="text/ng-template" id="/users/login.html">
+    <div class="page-header">
+        <h1>Flapper News</h1>
+    </div>
+
+    <div ng-show="error" class="alert alert-danger row">
+        <span>{{ error.message }}</span>
+    </div>
+
+    <form ng-submit="logIn()"
+          style="margin-top:30px;">
+        <h3>Log In</h3>
+
+        <div class="form-group">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Username"
+                   ng-model="user.username"></input>
+        </div>
+        <div class="form-group">
+            <input type="password"
+                   class="form-control"
+                   placeholder="Password"
+                   ng-model="user.password"></input>
+        </div>
+        <button type="submit" class="btn btn-primary">Log In</button>
+    </form>
+</script>
+
+</body>
+</html>
